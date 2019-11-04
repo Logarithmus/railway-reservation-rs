@@ -1,0 +1,15 @@
+[package]
+name = "railway-project-rs"
+version = "0.1.0"
+authors = ["Logarithmus <logarithmus.dev@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[profile.release]
+lto = true
+
+[dependencies]
+yarte = "0.3"
+warp = {version = "0.1", default-features = false, features = ["tls"]}
+diesel = {version = "1.4", features = ["mysql"]}
