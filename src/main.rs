@@ -1,11 +1,8 @@
 mod responders;
 
-use actix_web::{http::header::ContentEncoding, App, HttpServer};
+use actix_web::{App, HttpServer};
 
 fn main() {
-    //let mut tls_config = rustls::ServerConfig::new(Arc::new(rustls::NoClientAuth));
-    //tls_config.set_single_cert(cert_chain: Vec<key::Certificate>, key_der: key::PrivateKey);
-
     HttpServer::new(|| {
         App::new()
             .wrap(actix_web::middleware::Logger::default())
