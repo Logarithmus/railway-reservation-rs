@@ -10,8 +10,10 @@ edition = "2018"
 lto = true
 
 [dependencies]
-yarte = {version = "0.3", features = ["with-actix-web"]}
-actix-web = {version = "1.0", default-features = false, features = ["rust-tls"]}
+yarte = { version = "0.3", features = ["with-actix-web"] }
+actix-web = { version = "1.0", default-features = false, features = ["rust-tls"] }
+actix-rt = "0.2"
 actix-files = "*"
+serde = { version = "1.0", features = ["derive"] }
 rustls = "*"
-diesel = {version = "1.4", features = ["mysql"]}
+diesel = { version = "1.4", features = ["mysql"] }
