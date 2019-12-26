@@ -1,9 +1,11 @@
+mod controllers;
+mod dto;
 mod responders;
+mod templates;
 
 #[macro_use]
 extern crate actix_web;
 
-use actix_files::{self, NamedFile};
 use actix_web::{middleware, web, App, HttpServer};
 use rustls::internal::pemfile::{certs, pkcs8_private_keys};
 use std::fs::File;
@@ -25,8 +27,15 @@ fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .wrap(middleware::Compress::default())
-            .service(actix_files::Files::new("/static", "static"))
-            .service(actix_files::Files::new("/", "templates").index_file("index.html"))
+            .service(actix_files::Files::new("static", "static"))
+            .route("account", web::get().to(responders::account))
+            .route("admin", web::get().to(responders::admin))
+            .route("board", web::get().to(responders::board))
+            .route("buy", web::get().to(responders::buy))
+            .route("/", web::get().to(responders::timetable))
+            .route("login", web::get().to(responders::login))
+            .route("register", web::get().to(responders::register))
+            .route("timetable", web::get().to(responders::timetable))
             .default_service(
                 web::resource("/")
                     .route(web::get().to(responders::error404))

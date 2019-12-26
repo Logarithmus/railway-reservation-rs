@@ -23,7 +23,7 @@
 						<div class="nav-collapse collapse navbar-responsive-collapse">
 							<ul class="nav">
 								<li class="divider-vertical"></li>
-								<li class="active"><a href="timetable.html">Расписание поездов</a></li>
+								<li><a href="timetable.html">Расписание поездов</a></li>
 								<li class="divider-vertical"></li>
 								<li><a href="board.html">Виртуальное табло</a></li>
 							</ul>
@@ -31,7 +31,7 @@
 								<li class="divider-vertical"></li>
 								<li><a href="register.html">Регистрация</a></li>
 								<li class="divider-vertical"></li>
-								<li><a href="login.html">Вход</a></li>
+								<li class="active"><a href="login.html">Вход</a></li>
 							</ul>
 						</div><!-- /.nav-collapse -->
 					</div>
@@ -39,27 +39,19 @@
 			</nav><!-- /navbar -->
 		</header>
 		<main class="well">
-			<h3>Выберите маршрут</h3>
-			<form class="stations-form">
-				<datalist id="stations">
-					<option value="Минск"></option>
-					<option value="Гомель"></option>
-					<option value="Брест"></option>
-					<option value="Витебск"></option>
-					<option value="Гродно"></option>
-					<option value="Могилёв"></option>
-				</datalist>
+			<h3>Вход в систему</h3>
+			<form action="login" method="post">
 				<div>
-					<input type="text" list="stations" name="from_station" id="fromStation" placeholder="Откуда">
+					<input type="email" name="email" placeholder="E-mail">
 				</div>
 				<div>
-					<button type="button" class="btn btn-large flip-stations" onclick="[fromStation.value, toStation.value] = [toStation.value, fromStation.value]"><img src="../static/img/flip_stations.svg"></button>
+					<input type="password" name="password" placeholder="Пароль">
 				</div>
 				<div>
-					<input type="text" list="stations" name="to_station" id="toStation" placeholder="Куда">
+					<label class="checkbox"><input type="checkbox" name="remember"> Запомнить</label>
 				</div>
-				<div>
-					<button type="submit" class="btn btn-large btn-success">Поиск</button>
+				<div style="text-align: center">
+					<button type="submit" class="btn btn-success">Войти</button>
 				</div>
 			</form>
 		</main>
