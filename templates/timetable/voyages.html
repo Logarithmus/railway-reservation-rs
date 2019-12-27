@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="ru">
 	<head>
-		<title>Расписание поездов</title>
+		<title>FastRail - список поездов</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="HandheldFriendly" content="true">
@@ -19,7 +19,7 @@
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 						</a>
-						<a class="brand" href="#"><img src="/static/img/logo.svg"><span class="brand-name">FastRail</span></a>
+						<a class="brand" href="/"><img src="/static/img/logo.svg"><span class="brand-name">FastRail</span></a>
 						<div class="nav-collapse collapse navbar-responsive-collapse">
 							<ul class="nav">
 								<li class="divider-vertical"></li>
@@ -39,13 +39,31 @@
 			</nav><!-- /navbar -->
 		</header>
 		<main class="well">
-			<table>
-				{{#each voyages}}
-				<tr>
-					<td>{{ this.train_num }}</td>
-				</tr>
-				{{/each}}
-			</table>
+			<form action="buy" method="GET">
+				<table class="table table-striped">
+					<tr>
+						<th></th>
+						<th>Номер</th>
+						<th>Маршрут</th>
+						<th>Отправление</th>
+						<th>Прибытие</th>
+						<th>В пути</th>
+					</tr>
+					{{#each voyages}}
+					<tr>
+						<td>
+							<input type="radio" name="voyage" value="1">
+						</td>
+						<td>{{ this.train_num }}</td>
+						<td>{{ this.from }} - {{ this.to }}</td>
+						<td>{{ this.departure_datetime }}</td>
+						<td>{{ this.arrival_datetime }}</td>
+						<td>{{ this.on_the_way }}</td>
+					</tr>
+					{{/each}}
+				</table>
+				<button type="submit" class="btn btn-success">Купить билет</button>
+			</form>
 		</main>
 		<footer>
 			<img src="/static/img/copyleft.svg" class="copyleft"> <span>FastRail 2019</span>

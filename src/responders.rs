@@ -1,31 +1,42 @@
-use crate::controllers::*;
-
+use crate::controllers;
 use actix_web::{web, Either, HttpResponse, Responder};
 use core::fmt::Debug;
+use diesel::r2d2::ConnectionManager;
+use diesel::MysqlConnection;
+use serde::Deserialize;
 
-use serde::{Deserialize, Deserializer};
+pub type Pool = r2d2::Pool<ConnectionManager<MysqlConnection>>;
 
-use serde::de::IntoDeserializer;
+fn empty_string_as_none<'de, D>(de: D) -> Result<Option<String>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    Ok(Option::<String>::deserialize(de)
+        .ok()
+        .and_then(|x| match x.as_deref() {
+            None | Some("") => None,
+            _ => x,
+        }))
+}
 
 #[derive(Debug, Deserialize)]
 pub struct Route {
+    #[serde(default, deserialize_with = "empty_string_as_none")]
     from: Option<String>,
+    #[serde(default, deserialize_with = "empty_string_as_none")]
     to: Option<String>,
 }
 
-pub fn timetable(route: web::Query<Route>) -> Either<impl Responder, impl Responder> {
-    println!("{:?}, {:?}", route.from, route.to);
-    let from = route
-        .from
-        .as_ref()
-        .and_then(|x| if x == "" { None } else { Some(x) });
-    let to = route
-        .to
-        .as_ref()
-        .and_then(|x| if x == "" { None } else { Some(x) });
-    match (&from, &to) {
-        (Some(from), Some(to)) if from != to => Either::A(timetable::voyages(from, to)),
-        _ => Either::B(timetable::choose_route(
+pub fn timetable(
+    route: web::Query<Route>,
+    pool: web::Data<Pool>,
+) -> Either<impl Responder, impl Responder> {
+    match (&route.from, &route.to) {
+        (Some(from), Some(to)) if from != to => {
+            Either::A(controllers::timetable::voyages(pool, from, to))
+        }
+        _ => Either::B(controllers::timetable::choose_route(
+            pool,
             route.from.as_deref(),
             route.to.as_deref(),
         )),
@@ -35,21 +46,20 @@ pub fn timetable(route: web::Query<Route>) -> Either<impl Responder, impl Respon
 pub fn buy() -> impl Responder {
     unimplemented!()
 }
-
 pub fn board() -> impl Responder {
-    unimplemented!()
+    controllers::board::choose_station()
 }
 
 pub fn login() -> impl Responder {
-    unimplemented!()
+    controllers::login::login()
 }
 
 pub fn register() -> impl Responder {
-    unimplemented!()
+    controllers::register::register()
 }
 
-pub fn account() -> impl Responder {
-    unimplemented!()
+pub fn account(pool: web::Data<Pool>) -> impl Responder {
+    controllers::account::account(pool)
 }
 
 pub fn admin() -> impl Responder {

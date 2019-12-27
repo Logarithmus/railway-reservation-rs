@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="ru">
 	<head>
-		<title>Расписание поездов - выбор маршрута</title>
+		<title>FastRail - выбор маршрута</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="HandheldFriendly" content="true">
@@ -19,7 +19,7 @@
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 						</a>
-						<a class="brand" href="#"><img src="/static/img/logo.svg"><span class="brand-name">FastRail</span></a>
+						<a class="brand" href="/"><img src="/static/img/logo.svg"><span class="brand-name">FastRail</span></a>
 						<div class="nav-collapse collapse navbar-responsive-collapse">
 							<ul class="nav">
 								<li class="divider-vertical"></li>
@@ -39,6 +39,15 @@
 			</nav><!-- /navbar -->
 		</header>
 		<main class="well">
+		{{#if from.is_none() && to.is_some() }}
+			<div class="alert alert-error">
+				Выберите станцию отправления
+			</div>
+		{{else if from.is_some() && to.is_none() }}
+			<div class="alert alert-error">
+				Выберите станцию назначения
+			</div>
+		{{/if}}
 			<h3>Выберите маршрут</h3>
 			<form class="stations-form">
 				<datalist id="stations">
