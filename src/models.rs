@@ -23,9 +23,9 @@ pub struct Passenger {
 impl From<&IdPassenger> for Passenger {
     fn from(other: &IdPassenger) -> Passenger {
         Passenger {
-            passport_num: other.passport_num,
-            first_name: other.first_name,
-            last_name: other.last_name,
+            passport_num: other.passport_num.clone(),
+            first_name: other.first_name.clone(),
+            last_name: other.last_name.clone(),
         }
     }
 }
@@ -46,7 +46,9 @@ pub struct Station {
 
 impl From<&IdStation> for Station {
     fn from(other: &IdStation) -> Station {
-        Station { name: other.name }
+        Station {
+            name: other.name.clone(),
+        }
     }
 }
 

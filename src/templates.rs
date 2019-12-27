@@ -9,7 +9,7 @@ pub struct ChooseRoute {
     pub to: Option<String>,
 }
 
-struct VoyageInfo {
+pub struct VoyageInfo {
     pub train_num: String,
     pub from: String,
     pub to: String,

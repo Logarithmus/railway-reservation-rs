@@ -33,7 +33,7 @@ fn main() -> std::io::Result<()> {
     let pool = r2d2::Pool::builder()
         .build(manager)
         .expect("Failed to create pool.");
-    HttpServer::new(|| {
+    HttpServer::new(move || {
         App::new()
             .data(pool.clone())
             .wrap(middleware::Compress::default())

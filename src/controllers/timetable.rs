@@ -17,7 +17,7 @@ pub fn choose_route(pool: web::Data<Pool>, from: Option<&str>, to: Option<&str>)
     let stations = get_stations(pool)
         .unwrap_or_default()
         .iter()
-        .map(|st| st.name)
+        .map(|st| st.name.clone())
         .collect();
     templates::ChooseRoute {
         from: from.map(|s| s.to_string()),
@@ -26,16 +26,8 @@ pub fn choose_route(pool: web::Data<Pool>, from: Option<&str>, to: Option<&str>)
     }
 }
 
-fn get_voyages(pool: web::Data<Pool>, from: &str, to: &str) -> Result<Vec<Station>, diesel::result::Error> {
-    use crate::schema::{train::dsl::*, voyage::dsl::*, train_type::dsl::*};
-    let voyages = voyage.inner_join(train.inner_join(train_type)).load(&pool.get().unwrap());
-    let stations = id_stations.map(|s| s.iter().map(|st| Station::from(st)).collect());
-    stations
-}
-
 pub fn voyages(from: &str, to: &str) -> impl Responder {
-    let voyages = 
     templates::Voyages {
-        
+        voyages: Vec::new(),
     }
 }
