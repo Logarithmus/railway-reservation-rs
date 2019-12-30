@@ -32,9 +32,7 @@ pub fn timetable(
     pool: web::Data<Pool>,
 ) -> Either<impl Responder, impl Responder> {
     match (&route.from, &route.to) {
-        (Some(from), Some(to)) if from != to => {
-            Either::A(controllers::timetable::voyages(from, to))
-        }
+        (Some(from), Some(to)) => Either::A(controllers::timetable::voyages(pool, from, to)),
         _ => Either::B(controllers::timetable::choose_route(
             pool,
             route.from.as_deref(),

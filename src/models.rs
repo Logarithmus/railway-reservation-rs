@@ -1,15 +1,24 @@
 use crate::schema::{passenger, station, ticket, user};
-use chrono::naive::NaiveDateTime;
-use diesel::{Insertable, Queryable};
+use chrono::naive::{NaiveDateTime, NaiveTime};
+use diesel::sql_types::{Datetime, Time, Varchar};
+use diesel::{Insertable, QueryableByName};
 
-#[derive(Queryable)]
-pub struct Voyage {
+#[derive(QueryableByName, Debug)]
+pub struct VoyageInfo {
+    #[sql_type = "Varchar"]
     pub train_num: String,
-    pub from: String,
-    pub to: String,
+    #[sql_type = "Varchar"]
+    pub train_type: String,
+    #[sql_type = "Varchar"]
+    pub first_station: String,
+    #[sql_type = "Varchar"]
+    pub last_station: String,
+    #[sql_type = "Varchar"]
+    pub depart_station: String,
+    #[sql_type = "Datetime"]
     pub departure_datetime: NaiveDateTime,
+    #[sql_type = "Datetime"]
     pub arrival_datetime: NaiveDateTime,
-    pub on_the_way: NaiveDateTime,
 }
 
 #[derive(Insertable)]

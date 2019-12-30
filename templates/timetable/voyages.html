@@ -38,32 +38,43 @@
 				</div><!-- /navbar-inner -->
 			</nav><!-- /navbar -->
 		</header>
-		<main class="well">
+		<main>
+			<div class="well">
 			<form action="buy" method="GET">
 				<table class="table table-striped">
 					<tr>
 						<th></th>
 						<th>Номер</th>
+						<th>Тип</th>
 						<th>Маршрут</th>
 						<th>Отправление</th>
 						<th>Прибытие</th>
 						<th>В пути</th>
 					</tr>
+					{{#if voyages.is_empty()}}
+					<tr>
+						<td colspan="7">Поездов, следующих по данному маршруту, не найдено</td>
+					</tr>
+					{{/if}}
 					{{#each voyages}}
 					<tr>
 						<td>
 							<input type="radio" name="voyage" value="1">
 						</td>
 						<td>{{ this.train_num }}</td>
-						<td>{{ this.from }} - {{ this.to }}</td>
-						<td>{{ this.departure_datetime }}</td>
-						<td>{{ this.arrival_datetime }}</td>
-						<td>{{ this.on_the_way }}</td>
+						<td>{{ this.train_type }}</td>
+						<td>{{ this.first_station }} - {{ this.last_station }}</td>
+						<td>{{ this.departure_datetime.format("%d.%m.%Y %H:%M").to_string() }}</td>
+						<td>{{ this.arrival_datetime.format("%d.%m.%Y %H:%M").to_string() }}</td>
+						<td>{{ (this.arrival_datetime - this.departure_datetime).num_hours() }}:{{ (this.arrival_datetime - this.departure_datetime).num_minutes() % 60 }}</td>
 					</tr>
 					{{/each}}
 				</table>
+			{{#if !voyages.is_empty()}}
 				<button type="submit" class="btn btn-success">Купить билет</button>
+			{{/if}}
 			</form>
+		</div>
 		</main>
 		<footer>
 			<img src="/static/img/copyleft.svg" class="copyleft"> <span>FastRail 2019</span>

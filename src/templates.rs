@@ -1,4 +1,4 @@
-use crate::models;
+use crate::models::{TicketInfo, User, VoyageInfo};
 use yarte::Template;
 
 #[derive(Template)]
@@ -7,15 +7,6 @@ pub struct ChooseRoute {
     pub stations: Vec<String>,
     pub from: Option<String>,
     pub to: Option<String>,
-}
-
-pub struct VoyageInfo {
-    pub train_num: String,
-    pub from: String,
-    pub to: String,
-    pub departure_datetime: String,
-    pub arrival_datetime: String,
-    pub on_the_way: String,
 }
 
 #[derive(Template)]
@@ -33,7 +24,7 @@ pub struct Carriages {
 #[derive(Template)]
 #[template(path = "buy/ticket.html")]
 pub struct Ticket {
-    pub ticket: models::TicketInfo,
+    pub ticket: TicketInfo,
 }
 
 #[derive(Template)]
@@ -64,7 +55,7 @@ pub struct Login {
 #[derive(Template)]
 #[template(path = "account.html")]
 pub struct Account {
-    pub user: models::User,
+    pub user: User,
 }
 
 #[derive(Template)]
