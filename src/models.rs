@@ -1,10 +1,12 @@
-use crate::schema::{passenger, station, ticket, user};
+use crate::schema::{passenger, station, ticket, user, CarriageNumStart};
 use chrono::naive::{NaiveDateTime, NaiveTime};
-use diesel::sql_types::{Datetime, Time, Varchar};
+use diesel::sql_types::{Integer, Time, Tinyint, Unsigned, Varchar};
 use diesel::{Insertable, QueryableByName};
 
 #[derive(QueryableByName, Debug)]
-pub struct VoyageInfo {
+pub struct TimetableVoyage {
+    #[sql_type = "Unsigned<Integer>"]
+    pub voyage_id: u32,
     #[sql_type = "Varchar"]
     pub train_num: String,
     #[sql_type = "Varchar"]
@@ -14,11 +16,37 @@ pub struct VoyageInfo {
     #[sql_type = "Varchar"]
     pub last_station: String,
     #[sql_type = "Varchar"]
-    pub depart_station: String,
-    #[sql_type = "Datetime"]
-    pub departure_datetime: NaiveDateTime,
-    #[sql_type = "Datetime"]
-    pub arrival_datetime: NaiveDateTime,
+    pub from_station: String,
+    #[sql_type = "Varchar"]
+    pub to_station: String,
+    #[sql_type = "Time"]
+    pub depart_time: NaiveTime,
+    #[sql_type = "Time"]
+    pub arrival_time: NaiveTime,
+    #[sql_type = "Time"]
+    pub on_the_way_time: NaiveTime,
+}
+
+#[derive(QueryableByName, Debug)]
+pub struct BoardVoyage {
+    #[sql_type = "Varchar"]
+    pub train_num: String,
+    #[sql_type = "Varchar"]
+    pub train_type: String,
+    #[sql_type = "Varchar"]
+    pub first_station: String,
+    #[sql_type = "Varchar"]
+    pub last_station: String,
+    #[sql_type = "Time"]
+    pub arrival_time: NaiveTime,
+    #[sql_type = "Time"]
+    pub depart_time: NaiveTime,
+    #[sql_type = "Tinyint"]
+    pub platform_num: Option<u8>,
+    #[sql_type = "Tinyint"]
+    pub track_num: Option<u8>,
+    #[sql_type = "CarriageNumStart"]
+    pub carriage_num_start: Option<CarriageNumStart>,
 }
 
 #[derive(Insertable)]
@@ -83,8 +111,8 @@ pub struct IdTicket {
     pub id: u32,
     pub user_id: u32,
     pub passenger_id: u32,
-    pub departure_station_id: u32,
-    pub arrival_station_id: u32,
+    pub from_station_id: u32,
+    pub to_station_id: u32,
     pub carriage_id: u32,
     pub seat_num: u8,
     pub price: u32,
@@ -97,8 +125,8 @@ pub struct IdTicket {
 pub struct Ticket {
     pub user_id: u32,
     pub passenger_id: u32,
-    pub departure_station_id: u32,
-    pub arrival_station_id: u32,
+    pub from_station_id: u32,
+    pub to_station_id: u32,
     pub carriage_id: u32,
     pub seat_num: u8,
     pub price: u32,
@@ -111,8 +139,8 @@ impl From<&IdTicket> for Ticket {
         Ticket {
             user_id: other.user_id,
             passenger_id: other.passenger_id,
-            departure_station_id: other.departure_station_id,
-            arrival_station_id: other.arrival_station_id,
+            from_station_id: other.from_station_id,
+            to_station_id: other.to_station_id,
             carriage_id: other.carriage_id,
             seat_num: other.seat_num,
             price: other.price,
@@ -127,7 +155,19 @@ impl From<&IdTicket> for Ticket {
 pub struct User {
     pub email: String,
     pub pass: Vec<u8>,
-    pub is_admin: u8,
+    pub is_admin: bool,
+    pub is_active: bool,
+}
+
+impl From<&IdUser> for User {
+    fn from(other: &IdUser) -> User {
+        User {
+            email: other.email.clone(),
+            pass: other.pass.clone(),
+            is_admin: other.is_admin,
+            is_active: other.is_active,
+        }
+    }
 }
 
 #[derive(Queryable)]
@@ -135,5 +175,6 @@ pub struct IdUser {
     pub id: u32,
     pub email: String,
     pub pass: Vec<u8>,
-    pub is_admin: u8,
+    pub is_admin: bool,
+    pub is_active: bool,
 }

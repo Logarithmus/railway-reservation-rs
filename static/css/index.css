@@ -4,13 +4,9 @@ html, body {
 
 body {
 	background: #eee;
-	display: grid;
-	min-height: 100%;
-	grid-template-rows: auto 1fr auto;
-}
-
-header {
-	grid-row: 1;
+	display: flex;
+    min-height: 100vh;
+    flex-direction: column;
 }
 
 nav .brand {
@@ -31,13 +27,15 @@ nav .divider-vertical {
 }
 
 main {
-	grid-row: 2;
-	align-self: center;
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	max-width: 800px;
 	margin: 0 auto;
 }
 
-main > h3 {
+main h3 {
 	text-align: center;
 }
 
@@ -65,7 +63,6 @@ form.stations-form button {
 }
 
 footer {
-	grid-row: 3;
 	background: #ddd;
 	line-height: 2em;
 	padding: 0.25em 1em;

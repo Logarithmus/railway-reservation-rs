@@ -38,22 +38,33 @@
 				</div><!-- /navbar-inner -->
 			</nav><!-- /navbar -->
 		</header>
-		<main class="well">
-			<h3>Вход в систему</h3>
-			<form action="login" method="post">
-				<div>
-					<input type="email" name="email" placeholder="E-mail">
+		<main>
+			<div class="well">
+				<h3>Вход в систему</h3>
+			{{#if is_wrong_login }}
+				<div class="alert alert-error">
+					Пользователь не найден
 				</div>
-				<div>
-					<input type="password" name="password" placeholder="Пароль">
+			{{else if is_wrong_pass }}
+				<div class="alert alert-error">
+					Неверный пароль
 				</div>
-				<div>
-					<label class="checkbox"><input type="checkbox" name="remember"> Запомнить</label>
-				</div>
-				<div style="text-align: center">
-					<button type="submit" class="btn btn-success">Войти</button>
-				</div>
-			</form>
+			{{/if}}
+				<form action="login" method="post">
+					<div>
+						<input type="email" name="email" placeholder="E-mail">
+					</div>
+					<div>
+						<input type="password" name="password" placeholder="Пароль">
+					</div>
+					<div>
+						<label class="checkbox"><input type="checkbox" name="remember"> Запомнить</label>
+					</div>
+					<div style="text-align: center">
+						<button type="submit" class="btn btn-success">Войти</button>
+					</div>
+				</form>
+			</div>
 		</main>
 		<footer>
 			<img src="/static/img/copyleft.svg" class="copyleft"> <span>FastRail 2019</span>

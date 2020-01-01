@@ -38,25 +38,28 @@
 				</div><!-- /navbar-inner -->
 			</nav><!-- /navbar -->
 		</header>
-		<main class="well">
-			<h3>Выберите станцию</h3>
-			<form class="stations-form container-fluid">
-				<datalist id="stations">
-				<option value="Минск"></option>
-				<option value="Гомель"></option>
-				<option value="Брест"></option>
-				<option value="Витебск"></option>
-				<option value="Гродно"></option>
-				<option value="Могилёв"></option>
-				</datalist>
-				<div>
-					<input type="text" list="stations" name="from_station" id="fromStation" placeholder="Станция">
-				</div>
-				<div>
-					<button type="submit" class="btn btn-large btn-success">Поиск</button>
-				</div>
-				
-			</form>
+		<main>
+			<div class="well">
+				<h3>Выберите станцию</h3>
+				<form class="stations-form container-fluid">
+					<datalist id="stations">
+					{{#each stations}}
+						<option>{{ this }}</option>
+					{{/each}}
+					</datalist>
+					<div>
+						<input type="text" list="stations" name="station" id="station" placeholder="Станция" required oninvalid="this.setCustomValidity('Выберите станцию')"
+	 oninput="setCustomValidity('')">
+					</div>
+					<div style="width: 100%"></div>
+					<div>
+						<input type="date" name="date" value="{{ date.as_deref().unwrap_or(chrono::Local::today().format("%Y-%m-%d").to_string().as_ref()) }}">
+					</div>
+					<div>
+						<button type="submit" class="btn btn-large btn-success">Поиск</button>
+					</div>
+				</form>
+			</div>
 		</main>
 		<footer>
 			<img src="/static/img/copyleft.svg" class="copyleft"> <span>FastRail 2019</span>

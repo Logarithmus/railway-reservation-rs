@@ -38,22 +38,41 @@
 				</div><!-- /navbar-inner -->
 			</nav><!-- /navbar -->
 		</header>
-		<main class="well">
-			<h3>Регистрация</h3>
-			<form action="register" method="post">
-				<div>
-					<input type="email" name="email" placeholder="E-mail">
+		<main>
+			<div class="well">
+				<h3>Регистрация</h3>
+			{{#if is_user_exists }}
+				<div class="alert alert-error">
+					Такой пользователь уже существует
 				</div>
-				<div>
-					<input type="password" name="password" placeholder="Пароль">
-				</div>
-				<div>
-					<input type="password" name="repeat_password" placeholder="Повторите пароль">
-				</div>
-				<div style="text-align: center">
-					<button type="submit" class="btn btn-success">Зарегистрироваться</button>
-				</div>
-			</form>
+			{{/if}}
+				<form action="register" method="post">
+					<div>
+						<input type="email" name="email" placeholder="E-mail" required>
+					</div>
+					<script>
+						function validatePass() {
+							let pass = document.getElementById('password');
+							let repeatPass = document.getElementById('repeat_password');
+							if (pass.value != repeatPass.value) {
+								repeatPass.setCustomValidity('Пароли не совпадают')
+							} else {
+								repeatPass.setCustomValidity('')
+							}
+						}
+					</script>
+					<div>
+						<input type="password" name="password" id="password" placeholder="Пароль" required onchange="validatePass()">
+					</div>
+					<div>
+						
+						<input type="password" name="repeat_password" id="repeat_password" placeholder="Повторите пароль" required onkeyup="validatePass()">
+					</div>
+					<div style="text-align: center">
+						<button type="submit" class="btn btn-success">Зарегистрироваться</button>
+					</div>
+				</form>
+			</div>
 		</main>
 		<footer>
 			<img src="/static/img/copyleft.svg" class="copyleft"> <span>FastRail 2019</span>

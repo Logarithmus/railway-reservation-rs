@@ -25,18 +25,23 @@ pub struct Route {
     from: Option<String>,
     #[serde(default, deserialize_with = "empty_string_as_none")]
     to: Option<String>,
+    #[serde(default, deserialize_with = "empty_string_as_none")]
+    date: Option<String>,
 }
 
 pub fn timetable(
     route: web::Query<Route>,
     pool: web::Data<Pool>,
 ) -> Either<impl Responder, impl Responder> {
-    match (&route.from, &route.to) {
-        (Some(from), Some(to)) => Either::A(controllers::timetable::voyages(pool, from, to)),
+    match (&route.from, &route.to, &route.date) {
+        (Some(from), Some(to), Some(date)) => {
+            Either::A(controllers::timetable::voyages(pool, from, to, date))
+        }
         _ => Either::B(controllers::timetable::choose_route(
             pool,
             route.from.as_deref(),
             route.to.as_deref(),
+            route.date.as_deref(),
         )),
     }
 }
@@ -44,8 +49,27 @@ pub fn timetable(
 pub fn buy() -> impl Responder {
     unimplemented!()
 }
-pub fn board() -> impl Responder {
-    controllers::board::choose_station()
+
+#[derive(Debug, Deserialize)]
+pub struct BoardParams {
+    #[serde(default, deserialize_with = "empty_string_as_none")]
+    station: Option<String>,
+    #[serde(default, deserialize_with = "empty_string_as_none")]
+    date: Option<String>,
+}
+
+pub fn board(
+    params: web::Query<BoardParams>,
+    pool: web::Data<Pool>,
+) -> Either<impl Responder, impl Responder> {
+    match (&params.station, &params.date) {
+        (Some(station), Some(date)) => Either::A(controllers::board::board(pool, station, date)),
+        _ => Either::B(controllers::board::choose_station(
+            pool,
+            params.station.as_deref(),
+            params.date.as_deref(),
+        )),
+    }
 }
 
 pub fn login() -> impl Responder {

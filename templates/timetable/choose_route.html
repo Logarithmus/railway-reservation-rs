@@ -38,37 +38,45 @@
 				</div><!-- /navbar-inner -->
 			</nav><!-- /navbar -->
 		</header>
-		<main class="well">
-		{{#if from.is_none() && to.is_some() }}
-			<div class="alert alert-error">
-				Выберите станцию отправления
+		<main>
+			<div class="well">
+			{{#if from.is_none() && to.is_some() }}
+				<div class="alert alert-error">
+					Выберите станцию отправления
+				</div>
+			{{else if from.is_some() && to.is_none() }}
+				<div class="alert alert-error">
+					Выберите станцию назначения
+				</div>
+			{{/if}}
+				<h3>Выберите маршрут</h3>
+				<form class="stations-form">
+					<datalist id="stations">
+					{{#each stations }}
+						<option value="{{ this }}">{{ this }}</option>
+						}
+					{{/each}}
+					</datalist>
+					<div>
+						<input type="text" list="stations" name="from" id="fromStation" placeholder="Откуда" value="{{ from.as_deref().unwrap_or("") }}" required oninvalid="this.setCustomValidity('Выберите станцию отправления')"
+	 oninput="setCustomValidity('')">
+					</div>
+					<div>
+						<button type="button" class="btn btn-large flip-stations" onclick="[fromStation.value, toStation.value] = [toStation.value, fromStation.value]"><img src="/static/img/flip_stations.svg"></button>
+					</div>
+					<div>
+						<input type="text" list="stations" name="to" id="toStation" placeholder="Куда" value="{{ to.as_deref().unwrap_or("") }}" required oninvalid="this.setCustomValidity('Выберите станцию назначения')"
+	 oninput="setCustomValidity('')">
+					</div>
+					<div style="width: 100%"></div>
+					<div>
+						<input type="date" name="date" value="{{ date.as_deref().unwrap_or(chrono::Local::today().format("%Y-%m-%d").to_string().as_ref()) }}">
+					</div>
+					<div>
+						<button type="submit" class="btn btn-large btn-success">Поиск</button>
+					</div>
+				</form>
 			</div>
-		{{else if from.is_some() && to.is_none() }}
-			<div class="alert alert-error">
-				Выберите станцию назначения
-			</div>
-		{{/if}}
-			<h3>Выберите маршрут</h3>
-			<form class="stations-form">
-				<datalist id="stations">
-				{{#each stations }}
-					<option value="{{ this }}">{{ this }}</option>
-					}
-				{{~/each}}
-				</datalist>
-				<div>
-					<input type="text" list="stations" name="from" id="fromStation" placeholder="Откуда" value="{{ from.as_deref().unwrap_or("") }}">
-				</div>
-				<div>
-					<button type="button" class="btn btn-large flip-stations" onclick="[fromStation.value, toStation.value] = [toStation.value, fromStation.value]"><img src="/static/img/flip_stations.svg"></button>
-				</div>
-				<div>
-					<input type="text" list="stations" name="to" id="toStation" placeholder="Куда" value="{{ to.as_deref().unwrap_or("") }}">
-				</div>
-				<div>
-					<button type="submit" class="btn btn-large btn-success">Поиск</button>
-				</div>
-			</form>
 		</main>
 		<footer>
 			<img src="/static/img/copyleft.svg" class="copyleft"> <span>FastRail 2019</span>
