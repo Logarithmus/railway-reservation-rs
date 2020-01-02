@@ -154,7 +154,7 @@ impl From<&IdTicket> for Ticket {
 #[table_name = "user"]
 pub struct User {
     pub email: String,
-    pub pass: Vec<u8>,
+    pub pass: String,
     pub is_admin: bool,
     pub is_active: bool,
 }
@@ -174,7 +174,7 @@ impl From<&IdUser> for User {
 pub struct IdUser {
     pub id: u32,
     pub email: String,
-    pub pass: Vec<u8>,
+    pub pass: String,
     pub is_admin: bool,
     pub is_active: bool,
 }

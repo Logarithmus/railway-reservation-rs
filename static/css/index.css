@@ -39,7 +39,7 @@ main h3 {
 	text-align: center;
 }
 
-form.stations-form{
+form.stations-form {
 	display: flex;
 	justify-content: center;
 	flex-wrap: wrap;
@@ -48,6 +48,12 @@ form.stations-form{
 form.stations-form input {
 	height: 34px;
 	margin: 5px;
+	display: flex;
+}
+
+form > div {
+	display: flex;
+	justify-content: center;
 }
 
 form.stations-form button {

@@ -29,9 +29,9 @@
 							</ul>
 							<ul class="nav pull-right">
 								<li class="divider-vertical"></li>
-								<li><a href="register">Регистрация</a></li>
+								<li class="active"><a href="register"><b>{{ user.email }}</b></a></li>
 								<li class="divider-vertical"></li>
-								<li class="active"><a href="login">Вход</a></li>
+								<li><a href="/logout">Выход</a></li>
 							</ul>
 						</div><!-- /.nav-collapse -->
 					</div>
@@ -40,21 +40,10 @@
 		</header>
 		<main>
 			<div class="well">
-				<h3>Вход в систему</h3>
-				<form action="login" method="post">
-					<div>
-						<input type="email" name="email" placeholder="E-mail">
-					</div>
-					<div>
-						<input type="password" name="password" placeholder="Пароль">
-					</div>
-					<div>
-						<label class="checkbox"><input type="checkbox" name="remember"> Запомнить</label>
-					</div>
-					<div style="text-align: center">
-						<button type="submit" class="btn btn-success">Войти</button>
-					</div>
-				</form>
+				<p><b>ID:</b> {{ user.id }}</p>
+				<p><b>E-mail:</b> {{ user.email }}</p>
+				<p><b>Активен?:</b> {{ user.is_active }}</p>
+				<p><b>Админ?</b> {{ user.is_admin }}</p>
 			</div>
 		</main>
 		<footer>

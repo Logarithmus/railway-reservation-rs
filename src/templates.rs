@@ -4,6 +4,7 @@ use yarte::Template;
 #[derive(Template)]
 #[template(path = "timetable/choose_route.html")]
 pub struct ChooseRoute {
+    pub username: Option<String>,
     pub stations: Vec<String>,
     pub from: Option<String>,
     pub to: Option<String>,
@@ -13,6 +14,7 @@ pub struct ChooseRoute {
 #[derive(Template)]
 #[template(path = "timetable/voyages.html")]
 pub struct Voyages {
+    pub username: Option<String>,
     pub date: String,
     pub from: String,
     pub to: String,
@@ -22,18 +24,21 @@ pub struct Voyages {
 #[derive(Template)]
 #[template(path = "buy/carriages.html")]
 pub struct Carriages {
+    pub username: Option<String>,
     pub carriages: Vec<String>,
 }
 
 #[derive(Template)]
 #[template(path = "buy/ticket.html")]
 pub struct Ticket {
+    pub username: Option<String>,
     pub ticket: TicketInfo,
 }
 
 #[derive(Template)]
 #[template(path = "board/choose_station.html")]
 pub struct ChooseStation {
+    pub username: Option<String>,
     pub stations: Vec<String>,
     pub date: Option<String>,
 }
@@ -41,6 +46,9 @@ pub struct ChooseStation {
 #[derive(Template)]
 #[template(path = "board/board.html")]
 pub struct Board {
+    pub username: Option<String>,
+    pub station: String,
+    pub date: String,
     pub voyages: Vec<BoardVoyage>,
 }
 
@@ -48,6 +56,8 @@ pub struct Board {
 #[template(path = "register.html")]
 pub struct Register {
     pub is_user_exists: bool,
+    pub is_registered: bool,
+    pub is_not_registered: bool,
 }
 
 #[derive(Template)]
@@ -60,11 +70,12 @@ pub struct Login {
 #[derive(Template)]
 #[template(path = "account.html")]
 pub struct Account {
-    pub user: User,
+    pub user: IdUser,
 }
 
 #[derive(Template)]
 #[template(path = "admin.html")]
 pub struct Admin {
+    pub username: Option<String>,
     pub stations: Vec<String>,
 }

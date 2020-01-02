@@ -45,6 +45,14 @@
 				<div class="alert alert-error">
 					Такой пользователь уже существует
 				</div>
+			{{else if is_registered }}
+				<div class="alert alert-success">
+					Пользователь зарегистрирован
+				</div>
+			{{else if is_not_registered }}
+				<div class="alert alert-error">
+					Ошибка при регистрации
+				</div>
 			{{/if}}
 				<form action="register" method="post">
 					<div>

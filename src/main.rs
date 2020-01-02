@@ -4,6 +4,7 @@ mod responders;
 mod schema;
 mod templates;
 
+use actix_identity::{CookieIdentityPolicy, IdentityService};
 use actix_web::{middleware, web, App, HttpServer};
 use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
@@ -28,7 +29,8 @@ fn setup_rustls() -> rustls::ServerConfig {
 fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
     let sys = actix_rt::System::new("railway");
-    let connspec = std::env::var("DATABASE_URL").expect("DATABASE_URL");
+    let connspec = std::env::var("DATABASE_URL").expect("DATABASE_URL not found");
+    let secret_key = std::env::var("SECRET_KEY").expect("SECRET_KEY not found");
     let manager = ConnectionManager::<MysqlConnection>::new(connspec);
     let pool = r2d2::Pool::builder()
         .build(manager)
@@ -37,15 +39,32 @@ fn main() -> std::io::Result<()> {
         App::new()
             .data(pool.clone())
             .wrap(middleware::Compress::default())
+            .wrap(IdentityService::new(
+                CookieIdentityPolicy::new(secret_key.as_bytes())
+                    .name("auth")
+                    .path("/")
+                    .domain("localhost")
+                    .max_age_time(chrono::Duration::days(1))
+                    .secure(true),
+            ))
             .service(actix_files::Files::new("static", "static"))
-            .route("account", web::to(responders::account))
-            .route("admin", web::to(responders::admin))
-            .route("board", web::to(responders::board))
-            .route("buy", web::to(responders::buy))
-            .route("login", web::to(responders::login))
-            .route("register", web::to(responders::register))
-            .route("/", web::to(responders::timetable))
-            .route("timetable", web::to(responders::timetable))
+            .route("account", web::get().to(responders::account))
+            .route("admin", web::get().to(responders::admin))
+            .route("board", web::get().to(responders::board))
+            .route("buy", web::get().to(responders::buy))
+            .route("/", web::get().to(responders::timetable))
+            .route("timetable", web::get().to(responders::timetable))
+            .route("logout", web::get().to(responders::logout))
+            .service(
+                web::resource("login")
+                    .route(web::get().to(responders::login_get))
+                    .route(web::post().to(responders::login)),
+            )
+            .service(
+                web::resource("register")
+                    .route(web::get().to(responders::register_get))
+                    .route(web::post().to(responders::register)),
+            )
             .default_service(
                 web::resource("/")
                     .route(web::get().to(responders::error404))

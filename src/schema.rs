@@ -85,7 +85,7 @@ table! {
     user (id) {
         id -> Unsigned<Integer>,
         email -> Varchar,
-        pass -> Binary,
+        pass -> Varchar,
         is_admin -> Bool,
         is_active -> Bool,
     }

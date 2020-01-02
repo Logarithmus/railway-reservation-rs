@@ -28,10 +28,17 @@
 								<li><a href="board">Виртуальное табло</a></li>
 							</ul>
 							<ul class="nav pull-right">
+							{{#if let Some(name) = username.as_ref() }}
 								<li class="divider-vertical"></li>
-								<li><a href="register">Регистрация</a></li>
+								<li><a href="/account"><b>{{ name }}</b></a></li>
 								<li class="divider-vertical"></li>
-								<li><a href="login">Вход</a></li>
+								<li><a href="/logout">Выход</a></li>
+							{{else}}
+								<li class="divider-vertical"></li>
+								<li><a href="/register">Регистрация</a></li>
+								<li class="divider-vertical"></li>
+								<li><a href="/login">Вход</a></li>
+							{{/if}}
 							</ul>
 						</div><!-- /.nav-collapse -->
 					</div>
@@ -48,10 +55,8 @@
 							<th>Номер</th>
 							<th>Тип</th>
 							<th>Маршрут</th>
-							<th>Откуда</th>
-							<th>Отправление</th>
-							<th>Куда</th>
-							<th>Прибытие</th>
+							<th colspan="2">Отправление</th>
+							<th colspan="2">Прибытие</th>
 							<th>В пути</th>
 						</tr>
 						{{#if voyages.is_empty()}}

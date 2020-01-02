@@ -1,9 +1,9 @@
 use crate::models::{IdStation, TimetableVoyage};
 use crate::responders::Pool;
 use crate::templates;
+use actix_identity::Identity;
 use actix_web::web;
 use actix_web::Responder;
-
 use diesel::prelude::*;
 
 fn get_all_stations(pool: web::Data<Pool>) -> Result<Vec<String>, diesel::result::Error> {
@@ -14,11 +14,13 @@ fn get_all_stations(pool: web::Data<Pool>) -> Result<Vec<String>, diesel::result
 
 pub fn choose_route(
     pool: web::Data<Pool>,
+    identity: Identity,
     from: Option<&str>,
     to: Option<&str>,
     date: Option<&str>,
 ) -> impl Responder {
     templates::ChooseRoute {
+        username: identity.identity(),
         from: from.map(|s| s.to_string()),
         to: to.map(|s| s.to_string()),
         date: date.map(|s| s.to_string()),
@@ -79,8 +81,15 @@ fn get_voyages(pool: web::Data<Pool>, from: &str, to: &str, date: &str) -> Vec<T
     voyages
 }
 
-pub fn voyages(pool: web::Data<Pool>, from: &str, to: &str, date: &str) -> impl Responder {
+pub fn voyages(
+    pool: web::Data<Pool>,
+    identity: Identity,
+    from: &str,
+    to: &str,
+    date: &str,
+) -> impl Responder {
     templates::Voyages {
+        username: identity.identity(),
         date: date.to_string(),
         from: from.to_string(),
         to: to.to_string(),

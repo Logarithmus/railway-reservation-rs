@@ -14,16 +14,14 @@ yarte = { version = "0.3", features = ["with-actix-web"] }
 actix-web = { version = "1.0", default-features = false, features = ["rust-tls"] }
 actix-rt = "0.2"
 actix-files = "0.1"
-actix-identity = "0.2"
+actix-identity = "0.1"
 serde = { version = "1.0", features = ["derive"] }
 rustls = "*"
 r2d2 = "*"
-diesel = { version = "=1.4.3", features = ["mysql", "chrono", "r2d2", "numeric"] }
+diesel = { version = "1.4", features = ["mysql", "chrono", "r2d2", "numeric"] }
 diesel-derive-enum = { version = "0.4", features = ["mysql"] }
-bigdecimal = { version = "0.1", features = ["serde"] }
 chrono = "0.4"
 dotenv = "*"
 lazy_static = "1.4"
-argonautica = "0.2"
-lettre = "0.9"
-lettre_email = "0.9"
+argonautica = { version = "0.2", features = ["simd"] }
+futures = "*"

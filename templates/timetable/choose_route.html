@@ -28,10 +28,17 @@
 								<li><a href="board">Виртуальное табло</a></li>
 							</ul>
 							<ul class="nav pull-right">
+							{{#if let Some(name) = username.as_ref() }}
 								<li class="divider-vertical"></li>
-								<li><a href="register">Регистрация</a></li>
+								<li><a href="/account"><b>{{ name }}</b></a></li>
 								<li class="divider-vertical"></li>
-								<li><a href="login">Вход</a></li>
+								<li><a href="/logout">Выход</a></li>
+							{{else}}
+								<li class="divider-vertical"></li>
+								<li><a href="/register">Регистрация</a></li>
+								<li class="divider-vertical"></li>
+								<li><a href="/login">Вход</a></li>
+							{{/if}}
 							</ul>
 						</div><!-- /.nav-collapse -->
 					</div>
@@ -70,7 +77,8 @@
 					</div>
 					<div style="width: 100%"></div>
 					<div>
-						<input type="date" name="date" value="{{ date.as_deref().unwrap_or(chrono::Local::today().format("%Y-%m-%d").to_string().as_ref()) }}">
+						<input type="date" name="date" value="{{ date.as_deref().unwrap_or(chrono::Local::today().format("%Y-%m-%d").to_string().as_ref()) }}" required oninvalid="this.setCustomValidity('Выберите дату')"
+	 oninput="setCustomValidity('')">
 					</div>
 					<div>
 						<button type="submit" class="btn btn-large btn-success">Поиск</button>

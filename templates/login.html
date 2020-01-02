@@ -52,15 +52,12 @@
 			{{/if}}
 				<form action="login" method="post">
 					<div>
-						<input type="email" name="email" placeholder="E-mail">
+						<input type="email" name="email" placeholder="E-mail" required oninvalid="this.setCustomValidity('Введите E-mail')" oninput="this.setCustomValidity('')">
 					</div>
 					<div>
-						<input type="password" name="password" placeholder="Пароль">
+						<input type="password" name="password" placeholder="Пароль"  required oninvalid="this.setCustomValidity('Введите пароль')" oninput="this.setCustomValidity('')">
 					</div>
 					<div>
-						<label class="checkbox"><input type="checkbox" name="remember"> Запомнить</label>
-					</div>
-					<div style="text-align: center">
 						<button type="submit" class="btn btn-success">Войти</button>
 					</div>
 				</form>
