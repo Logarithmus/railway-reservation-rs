@@ -16,12 +16,12 @@ actix-rt = "0.2"
 actix-files = "0.1"
 actix-identity = "0.1"
 serde = { version = "1.0", features = ["derive"] }
-rustls = "*"
-r2d2 = "*"
+rustls = "0.15"
+r2d2 = "0.8"
 diesel = { version = "1.4", features = ["mysql", "chrono", "r2d2", "numeric"] }
 diesel-derive-enum = { version = "0.4", features = ["mysql"] }
 chrono = "0.4"
-dotenv = "*"
+dotenv = "0.15"
 lazy_static = "1.4"
 argonautica = { version = "0.2", features = ["simd"] }
-futures = "*"
+futures = "0.3"
