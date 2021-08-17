@@ -23,9 +23,9 @@
 						<div class="nav-collapse collapse navbar-responsive-collapse">
 							<ul class="nav">
 								<li class="divider-vertical"></li>
-								<li class="active"><a href="timetable">Расписание поездов</a></li>
+								<li class="active"><a href="/timetable">Расписание поездов</a></li>
 								<li class="divider-vertical"></li>
-								<li><a href="board">Виртуальное табло</a></li>
+								<li><a href="/board">Виртуальное табло</a></li>
 							</ul>
 							<ul class="nav pull-right">
 							{{#if let Some(name) = username.as_ref() }}
@@ -61,7 +61,6 @@
 					<datalist id="stations">
 					{{#each stations }}
 						<option value="{{ this }}">{{ this }}</option>
-						}
 					{{/each}}
 					</datalist>
 					<div>

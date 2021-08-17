@@ -19,6 +19,7 @@ pub fn register(pool: web::Data<Pool>, mail: &str, password: &str) -> impl Respo
     let hashed_pass = argonautica::Hasher::default()
         .with_password(password)
         .with_secret_key(secret_key.as_str())
+        .configure_iterations(64)
         .hash()
         .unwrap();
     println!("{}, len = {}", hashed_pass, hashed_pass.len());

@@ -25,7 +25,7 @@ pub struct Voyages {
 #[template(path = "buy/carriages.html")]
 pub struct Carriages {
     pub username: Option<String>,
-    pub carriages: Vec<String>,
+    pub carriages: Vec<Carriage>,
 }
 
 #[derive(Template)]
@@ -78,4 +78,9 @@ pub struct Account {
 pub struct Admin {
     pub username: Option<String>,
     pub stations: Vec<String>,
+    pub carriage_types: Vec<String>,
+    pub is_station_success: bool,
+    pub is_station_error: bool,
+    pub is_carriage_type_success: bool,
+    pub is_carriage_type_error: bool,
 }

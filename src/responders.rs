@@ -1,7 +1,7 @@
 use crate::controllers;
 use crate::models::{IdUser, User};
 use actix_identity::Identity;
-use actix_web::{web, Either, HttpResponse, Responder};
+use actix_web::{http, web, Either, HttpResponse, Responder};
 use core::fmt::Debug;
 use diesel::prelude::*;
 use diesel::r2d2::ConnectionManager;
@@ -51,8 +51,30 @@ pub fn timetable(
     }
 }
 
-pub fn buy() -> impl Responder {
-    unimplemented!()
+#[derive(Debug, Deserialize)]
+pub struct BuyParams {
+    #[serde(default, deserialize_with = "empty_string_as_none")]
+    from: Option<String>,
+    #[serde(default, deserialize_with = "empty_string_as_none")]
+    to: Option<String>,
+    #[serde(default)]
+    voyage_id: Option<u32>,
+}
+
+pub fn buy(
+    pool: web::Data<Pool>,
+    identity: Identity,
+    web::Query(params): web::Query<BuyParams>,
+) -> Either<impl Responder, impl Responder> {
+    match identity.identity() {
+        Some(mail) => Either::A(controllers::buy::carriages(pool, mail, params)),
+        None => Either::B(
+            HttpResponse::Found()
+                .header(http::header::LOCATION, "/login")
+                .finish()
+                .into_body(),
+        ),
+    }
 }
 
 #[derive(Debug, Deserialize)]
@@ -137,10 +159,10 @@ pub fn login(
     params: web::Form<LoginParams>,
     identity: Identity,
     pool: web::Data<Pool>,
-) -> Either<impl Responder, impl Responder> {
+) -> impl Responder {
     println!("{:?}", params);
     match (&params.email, &params.password, &identity.identity()) {
-        (_, _, Some(username)) => {
+        (_, _, Some(_)) => {
             identity.forget();
             Either::B(controllers::login::enter_credentials(false, false))
         }
@@ -162,7 +184,12 @@ pub fn login(
                     match is_correct {
                         true => {
                             identity.remember(u.email.clone());
-                            Either::A(controllers::account::account(u))
+                            Either::A(
+                                HttpResponse::Found()
+                                    .header(http::header::LOCATION, "/admin")
+                                    .finish()
+                                    .into_body(),
+                            )
                         }
                         false => Either::B(controllers::login::enter_credentials(false, true)),
                     }
@@ -190,14 +217,43 @@ pub fn account(
     }
 }
 
-pub fn admin() -> impl Responder {
-    unimplemented!()
+#[derive(Debug, Deserialize, Default)]
+pub struct AdminParams {
+    #[serde(default, deserialize_with = "empty_string_as_none")]
+    pub old_station_name: Option<String>,
+    #[serde(default, deserialize_with = "empty_string_as_none")]
+    pub new_station_name: Option<String>,
+    #[serde(default, deserialize_with = "empty_string_as_none")]
+    pub station_action: Option<String>,
+    #[serde(default, deserialize_with = "empty_string_as_none")]
+    pub old_carriage_type: Option<String>,
+    #[serde(default, deserialize_with = "empty_string_as_none")]
+    pub new_carriage_type: Option<String>,
+    #[serde(default, deserialize_with = "empty_string_as_none")]
+    pub carriage_type_action: Option<String>,
+}
+
+pub fn admin(
+    pool: web::Data<Pool>,
+    identity: Identity,
+    web::Query(params): web::Query<AdminParams>,
+) -> Either<impl Responder, impl Responder> {
+    use crate::schema::user::dsl::*;
+    let current_user = identity.identity().and_then(|mail| {
+        user.filter(email.eq(mail))
+            .first::<IdUser>(&pool.get().unwrap())
+            .ok()
+    });
+    match current_user {
+        Some(u) if u.is_admin => Either::A(controllers::admin::admin(pool, identity, params)),
+        _ => Either::B(account(pool, identity)),
+    }
 }
 
 pub fn logout(identity: Identity) -> impl Responder {
     identity.forget();
     HttpResponse::Found()
-        .header(actix_web::http::header::LOCATION, "/")
+        .header(http::header::LOCATION, "/")
         .finish()
         .into_body()
 }

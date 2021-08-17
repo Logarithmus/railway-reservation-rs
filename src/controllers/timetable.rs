@@ -8,7 +8,7 @@ use diesel::prelude::*;
 
 fn get_all_stations(pool: web::Data<Pool>) -> Result<Vec<String>, diesel::result::Error> {
     use crate::schema::station::dsl::*;
-    let id_stations = station.load::<IdStation>(&pool.get().unwrap());
+    let id_stations = station.order(name).load::<IdStation>(&pool.get().unwrap());
     id_stations.map(|s| s.iter().map(|st| st.name.clone()).collect())
 }
 
@@ -30,7 +30,9 @@ pub fn choose_route(
 
 fn get_voyages(pool: web::Data<Pool>, from: &str, to: &str, date: &str) -> Vec<TimetableVoyage> {
     let voyages: Vec<TimetableVoyage> = diesel::sql_query(format!(
-        "SELECT train.num as train_num,
+        "SELECT 
+            voyage.id as voyage_id,
+            train.num as train_num,
             train_type.name as train_type,
             first_st.name as first_station,
             last_st.name as last_station,

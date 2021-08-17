@@ -48,62 +48,69 @@
 		<main>
 			<div class="well">
 				<h4>Рейсы через {{ station }} на дату {{ date }}</h4>
-				<form action="buy" method="GET">
-					<table class="table table-striped">
-						<tr>
-							<th>Номер</th>
-							<th>Тип</th>
-							<th>Маршрут</th>
-							<th>Прибытие</th>
-							<th>Отправление</th>
-							<th>Платформа</th>
-							<th>Путь</th>
-							<th>Нумерация вагонов</th>
-						</tr>
-						{{#if voyages.is_empty()}}
-						<tr>
-							<td colspan="8">Поездов, следующих через эту станцию, не найдено</td>
-						</tr>
+				<table class="table table-striped">
+					<tr>
+						<th>Номер</th>
+						<th>Тип</th>
+						<th>Маршрут</th>
+						<th>Прибытие</th>
+						<th>Отправление</th>
+						<th>Платформа</th>
+						<th>Путь</th>
+						<th>Нумерация вагонов</th>
+					</tr>
+					{{#if voyages.is_empty()}}
+					<tr>
+						<td colspan="8">Поездов, следующих через эту станцию, не найдено</td>
+					</tr>
+					{{/if}}
+					{{#each voyages}}
+					<tr>
+						<td>{{ this.train_num }}</td>
+						<td>{{ this.train_type }}</td>
+						<td>{{ this.first_station }} - {{ this.last_station }}</td>
+						<td>
+						{{#if let Some(time) = this.arrival_time }}
+							{{ time.format("%H:%M").to_string() }}
+						{{else}}
+							-
 						{{/if}}
-						{{#each voyages}}
-						<tr>
-							<td>{{ this.train_num }}</td>
-							<td>{{ this.train_type }}</td>
-							<td>{{ this.first_station }} - {{ this.last_station }}</td>
-							<td>{{ this.arrival_time.format("%H:%M").to_string() }}</td>
-							<td>{{ this.depart_time.format("%H:%M").to_string() }}</td>
-							<td>
-							{{~#if let Some(num) = this.platform_num }}
-								{{ num }}
+						</td>
+						<td>
+						{{#if let Some(time) = this.depart_time }}
+							{{ time.format("%H:%M").to_string() }}
+						{{else}}
+							-
+						{{/if}}
+						</td>
+						<td>
+						{{~#if let Some(num) = this.platform_num }}
+							{{ num }}
+						{{~else}}
+							-
+						{{~/if}}
+						</td>
+						<td>
+						{{~#if let Some(num) = this.track_num }}
+							{{ num }}
+						{{~else}}
+							-
+						{{~/if}}
+						</td>
+						<td>
+						{{~#if let Some(start) = this.carriage_num_start }}
+							{{~#if let Head = start }}
+								С головы
 							{{~else}}
-								-
+								С хвоста
 							{{~/if}}
-							</td>
-							<td>
-							{{~#if let Some(num) = this.track_num }}
-								{{ num }}
-							{{~else}}
-								-
-							{{~/if}}
-							</td>
-							<td>
-							{{~#if let Some(start) = this.carriage_num_start }}
-								{{~#if let Head = start }}
-									С головы
-								{{~else}}
-									С хвоста
-								{{~/if}}
-							{{~else}}
-								-
-							{{~/if}}	
-							</td>
-						</tr>
-						{{/each}}
-					</table>
-				{{#if !voyages.is_empty()}}
-					<button type="submit" class="btn btn-success">Купить билет</button>
-				{{/if}}
-				</form>
+						{{~else}}
+							-
+						{{~/if}}	
+						</td>
+					</tr>
+					{{/each}}
+				</table>
 			</div>
 		</main>
 		<footer>

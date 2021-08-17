@@ -29,7 +29,7 @@
 							</ul>
 							<ul class="nav pull-right">
 								<li class="divider-vertical"></li>
-								<li class="active"><a href="admin"><b>{{ username.as_ref().unwrap() }}</b></a></li>
+								<li><a href="/account"><b>{{ username.as_ref().unwrap() }}</b></a></li>
 								<li class="divider-vertical"></li>
 								<li><a href="/logout">Выход</a></li>
 							</ul>
@@ -39,23 +39,78 @@
 			</nav><!-- /navbar -->
 		</header>
 		<main>
+		<div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
 			<div class="well">
-				<h3>Вход в систему</h3>
-				<form action="login" method="post">
+				<h4>Управление станциями</h4>
+			{{#if is_station_error }}
+				<div class="alert alert-error">
+					Ошибка
+				</div>
+			{{else if is_station_success }}
+				<div class="alert alert-success">
+					Успешно
+				</div>
+			{{/if}}
+				<form action="admin" method="get">
+					<datalist id="stations">
+					{{#each stations }}
+						<option value="{{ this }}">{{ this }}</option>
+					{{/each}}
+					</datalist>
 					<div>
-						<input type="email" name="email" placeholder="E-mail">
+						<input type="text" list="stations" name="old_station_name" placeholder="Станция">
 					</div>
 					<div>
-						<input type="password" name="password" placeholder="Пароль">
+						<select name="station_action">
+							<option value="rename">Изменить</option>
+							<option value="delete">Удалить</option>
+							<option value="create" selected>Создать</option>
+						</select>
 					</div>
 					<div>
-						<label class="checkbox"><input type="checkbox" name="remember"> Запомнить</label>
+						<input type="text" name="new_station_name" placeholder="Новое название">
 					</div>
-					<div style="text-align: center">
-						<button type="submit" class="btn btn-success">Войти</button>
+					<div>
+						<button type="submit" class="btn btn-primary" name="submit_station" value="1">ОК</button>
 					</div>
 				</form>
 			</div>
+			<div class="well">
+				<h4>Управление типами вагонов</h4>
+			{{#if is_carriage_type_error }}
+				<div class="alert alert-error">
+					Ошибка
+				</div>
+			{{else if is_carriage_type_success }}
+				<div class="alert alert-success">
+					Успешно
+				</div>
+			{{/if}}
+				<form action="admin" method="get">
+					<datalist id="carriage_types">
+					{{#each carriage_types }}
+						<option value="{{ this }}">{{ this }}</option>
+					{{/each}}
+					</datalist>
+					<div>
+						<input type="text" list="carriage_types" name="old_carriage_type" placeholder="Тип вагона">
+					</div>
+					<div>
+						<select name="carriage_type_action">
+							<option value="rename">Изменить</option>
+							<option value="delete">Удалить</option>
+							<option value="create" selected>Создать</option>
+						</select>
+					</div>
+					<div>
+						<input type="text" name="new_carriage_type" placeholder="Новое название">
+					</div>
+					<div>
+						<button type="submit" class="btn btn-primary" name="submit_carriage_type" value="1">ОК</button>
+					</div>
+				</form>
+			</div>
+		</div>
 		</main>
 		<footer>
 			<img src="/static/img/copyleft.svg" class="copyleft"> <span>FastRail 2019</span>

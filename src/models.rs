@@ -1,14 +1,14 @@
-use crate::schema::{passenger, station, ticket, user, CarriageNumStart};
+use crate::schema::*;
 use chrono::naive::{NaiveDateTime, NaiveTime};
-use diesel::sql_types::{Integer, Time, Tinyint, Unsigned, Varchar};
+use diesel::sql_types::{Integer, Nullable, Time, Tinyint, Unsigned, Varchar};
 use diesel::{Insertable, QueryableByName};
 
 #[derive(QueryableByName, Debug)]
 pub struct TimetableVoyage {
     #[sql_type = "Unsigned<Integer>"]
     pub voyage_id: u32,
-    #[sql_type = "Varchar"]
-    pub train_num: String,
+    #[sql_type = "Unsigned<Integer>"]
+    pub train_num: u32,
     #[sql_type = "Varchar"]
     pub train_type: String,
     #[sql_type = "Varchar"]
@@ -29,23 +29,23 @@ pub struct TimetableVoyage {
 
 #[derive(QueryableByName, Debug)]
 pub struct BoardVoyage {
-    #[sql_type = "Varchar"]
-    pub train_num: String,
+    #[sql_type = "Unsigned<Integer>"]
+    pub train_num: u32,
     #[sql_type = "Varchar"]
     pub train_type: String,
     #[sql_type = "Varchar"]
     pub first_station: String,
     #[sql_type = "Varchar"]
     pub last_station: String,
-    #[sql_type = "Time"]
-    pub arrival_time: NaiveTime,
-    #[sql_type = "Time"]
-    pub depart_time: NaiveTime,
-    #[sql_type = "Tinyint"]
+    #[sql_type = "Nullable<Time>"]
+    pub arrival_time: Option<NaiveTime>,
+    #[sql_type = "Nullable<Time>"]
+    pub depart_time: Option<NaiveTime>,
+    #[sql_type = "Nullable<Unsigned<Tinyint>>"]
     pub platform_num: Option<u8>,
-    #[sql_type = "Tinyint"]
+    #[sql_type = "Nullable<Unsigned<Tinyint>>"]
     pub track_num: Option<u8>,
-    #[sql_type = "CarriageNumStart"]
+    #[sql_type = "Nullable<CarriageNumStartMapping>"]
     pub carriage_num_start: Option<CarriageNumStart>,
 }
 
@@ -177,4 +177,47 @@ pub struct IdUser {
     pub pass: String,
     pub is_admin: bool,
     pub is_active: bool,
+}
+
+#[derive(Insertable)]
+#[table_name = "carriage_type"]
+pub struct CarriageType {
+    pub name: String,
+    pub seats_count: u8,
+}
+
+impl From<&IdCarriageType> for CarriageType {
+    fn from(other: &IdCarriageType) -> Self {
+        Self {
+            name: other.name.clone(),
+            seats_count: other.seats_count,
+        }
+    }
+}
+
+#[derive(Queryable)]
+pub struct IdCarriageType {
+    pub id: u8,
+    pub name: String,
+    pub seats_count: u8,
+}
+
+#[derive(Insertable)]
+#[table_name = "carriage"]
+pub struct Carriage {
+    pub voyage_id: u32,
+    pub carriage_type_id: u32,
+    pub number: u8,
+}
+
+#[derive(QueryableByName, Debug)]
+pub struct CarriageInfo {
+    #[sql_type = "Unsigned<Integer>"]
+    pub id: u32,
+    #[sql_type = "Nullable<Integer>"]
+    pub voyage_id: u32,
+    #[sql_type = "Varchar"]
+    pub carriage_type_name: String,
+    #[sql_type = "Tinyint"]
+    pub number: u8,
 }

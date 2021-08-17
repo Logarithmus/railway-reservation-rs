@@ -31,10 +31,13 @@ fn main() -> std::io::Result<()> {
     let sys = actix_rt::System::new("railway");
     let connspec = std::env::var("DATABASE_URL").expect("DATABASE_URL not found");
     let secret_key = std::env::var("SECRET_KEY").expect("SECRET_KEY not found");
+	println!("Creating database connection manager...");
     let manager = ConnectionManager::<MysqlConnection>::new(connspec);
+	println!("Creating database connection pool...");
     let pool = r2d2::Pool::builder()
         .build(manager)
         .expect("Failed to create pool.");
+	println!("Starting server...");
     HttpServer::new(move || {
         App::new()
             .data(pool.clone())

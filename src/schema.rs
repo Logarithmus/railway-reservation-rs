@@ -12,7 +12,7 @@ table! {
         id -> Unsigned<Integer>,
         station_id -> Unsigned<Integer>,
         carriage_id -> Unsigned<Integer>,
-        seats_state -> Binary,
+        seats_state -> Unsigned<Bigint>,
         seat_price -> Unsigned<Integer>,
     }
 }
@@ -21,7 +21,7 @@ table! {
     carriage_type (id) {
         id -> Unsigned<Tinyint>,
         name -> Varchar,
-        seats_count -> Tinyint,
+        seats_count -> Unsigned<Tinyint>,
     }
 }
 
@@ -106,8 +106,8 @@ table! {
         departure_datetime_absolute -> Datetime,
         late_by -> Time,
         carriage_num_start -> Nullable<CarriageNumStartMapping>,
-        track_num -> Nullable<Tinyint>,
-        platform_num -> Nullable<Tinyint>,
+        track_num -> Nullable<Unsigned<Tinyint>>,
+        platform_num -> Nullable<Unsigned<Tinyint>>,
     }
 }
 
