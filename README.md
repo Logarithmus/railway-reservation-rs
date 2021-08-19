@@ -34,10 +34,10 @@ Railway reservation system, written in Rust
 
 ### Tech stack
 
-- Database: [`MariaDB`]
-- ORM: [`Diesel`](https://diesel.rs)
-- Backend framework: [`Actix-web`](https://actix.rs)
-- Template engine: [`Yarte`](https://lib.rs/yarte)
-- Password encryption: [`Argon2`] via [`argonautica`](https://lib.rs/argonautica)
+- Database: [`MariaDB`](https://mariadb.org)
+- ORM: [`diesel`](https://diesel.rs)
+- Backend framework: [`actix-web`](https://actix.rs)
+- Template engine: [`yarte`](https://lib.rs/yarte)
+- Password hashing: `Argon2` via [`argonautica`](https://lib.rs/argonautica)
 - CSS framework: `Bootstrap 2.3.2`
 - TLS: [`rustls`](https://lib.rs/rustls)
